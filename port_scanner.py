@@ -5,16 +5,15 @@ import socket
 from IPy import IP
 
 
-def scan_port(ip_address, port):
+def scan_port(ip_address, port) -> bool:
     try:
         sock = socket.socket()
         sock.settimeout(0.5)
         # time to connect to different ports differs
         sock.connect((ip_address, port))
-        print(f'Port {port} is open')
+        return True
     except:
-        print(f'Port {port} is closed')
-
+        False
 
 def convert_ip(ip_addr):
     try:
@@ -24,6 +23,13 @@ def convert_ip(ip_addr):
 
 
 if __name__ == '__main__':
-    ip_address = convert_ip(input('Enter target to scan: '))
-    for port in range(80, 90):
-        scan_port(ip_address, port)
+    targets = input("[+] Enter target(s) to scan (split multiple targets with','): ")
+    for ip_address in targets.split(','):
+        print('Scanning: ', ip_address)
+        open_ports_counter = 0
+        for port in range(1, 100):
+            if scan_port(convert_ip(ip_address.strip()), port):
+                print(f'[+] {ip_address} Port {port} is open')
+                open_ports_counter += 1
+        if open_ports_counter == 0:
+            print(f'[-] {ip_address} no ports from range [1-100] are open')

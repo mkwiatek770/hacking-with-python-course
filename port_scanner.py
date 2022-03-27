@@ -16,7 +16,14 @@ def scan_port(ip_address, port):
         print(f'Port {port} is closed')
 
 
+def convert_ip(ip_addr):
+    try:
+        return IP(ip_addr)
+    except ValueError:
+        return socket.gethostbyname(ip_addr)
+
+
 if __name__ == '__main__':
-    ip_address = input('Enter target to scan: ')
+    ip_address = convert_ip(input('Enter target to scan: '))
     for port in range(80, 90):
         scan_port(ip_address, port)
